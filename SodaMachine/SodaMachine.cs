@@ -26,7 +26,26 @@ namespace SodaMachine
         //A method to fill the sodamachines register with coin objects.
         public void FillRegister()
         {
-           
+            for (int i = 0; i < 20; i++)
+            {
+                Quarter quarter = new Quarter();
+                _register.Add(quarter);
+            }
+            for(int i = 0; i < 10; i++)
+            {
+                Dime dime = new Dime();
+                _register.Add(dime);
+            }
+            for(int i = 0; i < 20; i++)
+            {
+                Nickel nickel = new Nickel();
+                _register.Add(nickel);
+            }
+            for(int i = 0; i <50; i++)
+            {
+                Penny penny = new Penny();
+                _register.Add(penny);
+            }
         }
         //A method to fill the sodamachines inventory with soda can objects.
         public void FillInventory()
@@ -97,7 +116,12 @@ namespace SodaMachine
         //Takes in a list of coins to returnt he total value of the coins as a double.
         private double TotalCoinValue(List<Coin> payment)
         {
-           
+            double totalPayment = 0;
+           foreach(Coin coin in payment)
+            {
+                totalPayment += coin.Value;
+            }
+            return totalPayment;
         }
         //Puts a list of coins into the soda machines register.
         private void DepositCoinsIntoRegister(List<Coin> coins)

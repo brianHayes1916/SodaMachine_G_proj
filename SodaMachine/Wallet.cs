@@ -20,7 +20,24 @@ namespace SodaMachine
         //Fills wallet with starting money
         private void FillRegister()
         {
-          
+            double totalCash = 0;
+            while (totalCash < 5)
+            {
+                totalCash = 0;
+                Penny penny = new Penny();
+                Nickel nickel = new Nickel();
+                Dime dime = new Dime();
+                Quarter quarter = new Quarter();
+                Coins.Add(penny);
+                Coins.Add(nickel);
+                Coins.Add(dime);
+                Coins.Add(quarter);
+                foreach (Coin coin in Coins)
+                {
+                    totalCash += coin.Value;
+
+                }
+            }
         }
     }
 }
