@@ -26,24 +26,41 @@ namespace SodaMachine
         //When all is said and done this method will return a list of coin objects that the customer will use a payment for their soda.
         public List<Coin> GatherCoinsFromWallet(Can selectedCan)
         {
-          
+            double canPrice = selectedCan.Price;
+            List<Coin> selectedCoins = new List<Coin>();
+            Console.WriteLine($"The can costs {canPrice}.");
+            while(canPrice > 0)
+            {
+                Console.WriteLine("What type of coin would you like to put into the machine?");
+                Console.WriteLine("Please enter as seen. penny, nickle, dime, quarter.");
+                string coinName = Console.ReadLine();
+                Coin coin = GetCoinFromWallet(coinName);
+                selectedCoins.Add(coin);
+                canPrice -= coin.Value;
+                Console.WriteLine($"Balance due {canPrice}");
+            }
+            return selectedCoins;
         }
         //Returns a coin object from the wallet based on the name passed into it.
         //Returns null if no coin can be found
         public Coin GetCoinFromWallet(string coinName)
         {
-            foreach (Coin coin in Wallet.Coins)
+            bool valid = false;
+            while(valid == false)
             {
-                if (coin.Name == coinName)
+                foreach (Coin coin in Wallet.Coins)
                 {
-                    Wallet.Coins.Remove(coin);
-                    return coin;
-                }
-                else
-                {
-                    Console.WriteLine("You do not have one of those coins.");
-                    return null;
-                    //how do i reprompt for input if the value is a paramiter
+                    if (coin.Name == coinName)
+                    {
+                        Wallet.Coins.Remove(coin);
+                        return coin;
+                    }
+                    else
+                    {
+                        Console.WriteLine("You do not have one of those coins.");
+                        
+                        //how do i reprompt for input if the value is a paramiter
+                    }
                 }
             }
         }
