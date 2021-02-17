@@ -45,6 +45,7 @@ namespace SodaMachine
         //Returns null if no coin can be found
         public Coin GetCoinFromWallet(string coinName)
         {
+            Coin duplicateCoin = new Coin();
             bool valid = false;
             while(valid == false)
             {
@@ -52,17 +53,20 @@ namespace SodaMachine
                 {
                     if (coin.Name == coinName)
                     {
+                        duplicateCoin = coin;
                         Wallet.Coins.Remove(coin);
-                        return coin;
+                        valid = true;
                     }
                     else
                     {
                         Console.WriteLine("You do not have one of those coins.");
-                        
+                        Console.WriteLine("Please enter a different coin");
+                        coinName = Console.ReadLine();
                         //how do i reprompt for input if the value is a paramiter
                     }
                 }
             }
+            return duplicateCoin;
         }
         //Takes in a list of coin objects to add into the customers wallet.
         public void AddCoinsIntoWallet(List<Coin> coinsToAdd)
