@@ -88,7 +88,15 @@ namespace SodaMachine
         //Gets a soda from the inventory based on the name of the soda.
         private Can GetSodaFromInventory(string nameOfSoda)
         {
-          
+                foreach (Can can in _inventory)
+                {
+                    if (can.Name == nameOfSoda)
+                    {
+                        _inventory.Remove(can);
+                        return can;
+                    }
+                }
+            return null;
         }
 
         //This is the main method for calculating the result of the transaction.
@@ -100,7 +108,23 @@ namespace SodaMachine
         //If the payment does not meet the cost of the soda: despense payment back to the customer.
         private void CalculateTransaction(List<Coin> payment, Can chosenSoda, Customer customer)
         {
-           
+            double totalPaid = TotalCoinValue(payment);
+            if(totalPaid > chosenSoda.Price)
+            {
+                double change = DetermineChange(totalPaid, chosenSoda.Price);
+                List<Coin> changeCoins = GatherChange(change);
+                if(changeCoins == null)
+                {
+                    Console.WriteLine("Sorry there is not sufficient change to complete the transaction.");
+                    customer.AddCoinsIntoWallet(payment);
+                }
+                else
+                {
+                    customer.AddCoinsIntoWallet(changeCoins);
+                    customer.AddCanToBackpack(chosenSoda);
+                }
+            }
+            
         }
         //Takes in the value of the amount of change needed.
         //Attempts to gather all the required coins from the sodamachine's register to make change.
@@ -108,24 +132,97 @@ namespace SodaMachine
         //If the change cannot be made, return null.
         private List<Coin> GatherChange(double changeValue)
         {
-            
+            List<Coin> change = new List<Coin>();
+            while(0.25 >= changeValue)
+            {
+                bool hasQuarters = RegisterHasCoin("Quarter");
+                if (hasQuarters == true)
+                {
+                    Coin quarterHolder = GetCoinFromRegister("Quarter");
+                    change.Add(quarterHolder);
+                    changeValue -= 0.25;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (0.10 >= changeValue)
+            {
+                bool hasDimes = RegisterHasCoin("Dime");
+                if (hasDimes == true)
+                {
+                    Coin dimeHolder = GetCoinFromRegister("Dime");
+                    change.Add(dimeHolder);
+                    changeValue -= 0.10;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (0.05 >= changeValue)
+            {
+                bool hasNickels = RegisterHasCoin("Nickel");
+                if (hasNickels == true)
+                {
+                    Coin nickelHolder = GetCoinFromRegister("Nickel");
+                    change.Add(nickelHolder);
+                    changeValue -= 0.05;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (0.01 >= changeValue)
+            {
+                bool hasPennies = RegisterHasCoin("Penny");
+                if (hasPennies == true)
+                {
+                    Coin quarterHolder = GetCoinFromRegister("Quarter");
+                    change.Add(quarterHolder);
+                    changeValue -= 0.25;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            return change;
         }
         //Reusable method to check if the register has a coin of that name.
         //If it does have one, return true.  Else, false.
         private bool RegisterHasCoin(string name)
         {
-           
+           foreach(Coin coin in _register)
+            {
+                if(coin.Name == name)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         //Reusable method to return a coin from the register.
         //Returns null if no coin can be found of that name.
         private Coin GetCoinFromRegister(string name)
         {
-            
+            foreach(Coin coin in _register)
+            {
+                if(name == coin.Name)
+                {
+                    _register.Remove(coin);
+                    return coin;
+                }
+            }
+            return null;
         }
         //Takes in the total payment amount and the price of can to return the change amount.
         private double DetermineChange(double totalPayment, double canPrice)
         {
-            
+            double change = totalPayment - canPrice;
+            return change;
         }
         //Takes in a list of coins to returnt he total value of the coins as a double.
         private double TotalCoinValue(List<Coin> payment)
@@ -140,7 +237,10 @@ namespace SodaMachine
         //Puts a list of coins into the soda machines register.
         private void DepositCoinsIntoRegister(List<Coin> coins)
         {
-           
+           foreach(Coin coin in coins)
+            {
+                _register.Add(coin);
+            }
         }
     }
 }
