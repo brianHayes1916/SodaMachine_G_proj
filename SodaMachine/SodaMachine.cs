@@ -120,11 +120,20 @@ namespace SodaMachine
                 }
                 else
                 {
+                    DepositCoinsIntoRegister(payment);
                     customer.AddCoinsIntoWallet(changeCoins);
                     customer.AddCanToBackpack(chosenSoda);
                 }
             }
-            
+            else if(totalPaid == chosenSoda.Price)
+            {
+                DepositCoinsIntoRegister(payment);
+                customer.AddCanToBackpack(chosenSoda);
+            }
+            else
+            {
+                customer.AddCoinsIntoWallet(payment);
+            }
         }
         //Takes in the value of the amount of change needed.
         //Attempts to gather all the required coins from the sodamachine's register to make change.
@@ -136,7 +145,7 @@ namespace SodaMachine
             while(0.25 >= changeValue)
             {
                 bool hasQuarters = RegisterHasCoin("Quarter");
-                if (hasQuarters == true)
+                if (hasQuarters)
                 {
                     Coin quarterHolder = GetCoinFromRegister("Quarter");
                     change.Add(quarterHolder);
@@ -189,6 +198,7 @@ namespace SodaMachine
                     return null;
                 }
             }
+
             return change;
         }
         //Reusable method to check if the register has a coin of that name.

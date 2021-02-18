@@ -31,13 +31,13 @@ namespace SodaMachine
             Console.WriteLine($"The can costs {canPrice}.");
             while(canPrice > 0)
             {
-                Console.WriteLine("What type of coin would you like to put into the machine?");
-                Console.WriteLine("Please enter as seen. penny, nickle, dime, quarter.");
-                string coinName = Console.ReadLine();
+                string coinName = UserInterface.CoinSelection(selectedCan, selectedCoins);
                 Coin coin = GetCoinFromWallet(coinName);
-                selectedCoins.Add(coin);
-                canPrice -= coin.Value;
-                Console.WriteLine($"Balance due {canPrice}");
+                if(coin != null)
+                {
+                    selectedCoins.Add(coin);
+                    canPrice -= coin.Value;
+                }
             }
             return selectedCoins;
         }
@@ -58,6 +58,7 @@ namespace SodaMachine
         //Takes in a list of coin objects to add into the customers wallet.
         public void AddCoinsIntoWallet(List<Coin> coinsToAdd)
         {
+            //look at AddRange for list as well
             foreach (Coin coin in coinsToAdd)
             {
                 Wallet.Coins.Add(coin);
